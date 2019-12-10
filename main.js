@@ -1,5 +1,5 @@
 
-var connection = new WebSocket('hello-lal.github.io/views/webrtc'),
+var connection = new WebSocket('https://hello-lal.github.io/views/webrtc'),
     name = "";
 var loginPage = document.querySelector('#login-page'),
     usernameInput = document.querySelector('#username'),
