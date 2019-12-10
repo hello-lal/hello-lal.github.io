@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>视频通话</title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"  href="/stylesheets/hehe.css" />
+    <link rel="stylesheet"  href="/stylesheets/xixi.css" />
+    <!--必要样式-->
+    <link rel="stylesheet"  href="/stylesheets/haha.css" />
+
+    <!--[if IE]>
+    <![endif]-->
+    <style>
+        body {
+            background-color:RGB(0,0,0);
+            background-image: url("images/demo-1-bg.jpg");
+            margin-top: 15px;
+            font-family: sans-serif;
+            color: white;
+        }
+        video {
+            background: RGB(255,255,255);
+            border: 1px solid gray;
+        }
+        .page {
+            position: relative;
+            display: block;
+            margin: 0 auto;
+            width: 500px;
+            height: 500px;
+        }
+        #yours {
+            width: 150px;
+            height: 150px;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+        #theirs {
+            width: 500px;
+            height: 500px;}
+
+    </style>
+</head>
+<body>
+<div id="login-page">
+    <div class="container demo-1">
+        <div class="content">
+            <div id="large-header" class="large-header">
+                <canvas id="demo-canvas"></canvas>
+                <h1 class="main-title">Username <span class="thin"> <input type="text" id="username"/><button id="login" class="ff"><small>Login</small></button></span></h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="call-page" class="page">
+    <video id="yours" autoplay=""></video>
+    <video id="theirs" autoplay=""></video>
+    <input type="text" id="their-username"/>
+    <button id="call">呼叫</button>
+    <button id="hang-up">挂断</button>
+    <button onclick="capture()">拍照</button>
+    <button onclick="changeFilter()">滤镜</button>
+    <a onclick="toImg()" id="downloadBtn">下载图片</a>
+    <div>
+        <video muted autoplay controls id="video"></video>
+        <video muted autoplay controls id="recorderVideo"></video>
+    </div>
+    <button onclick="showVideo()">打开摄像头</button>
+    <button onclick="startRecord()" id="recordBtn">开始录制</button>
+    <button id="stopRecord">结束</button>
+    <a  id="downloadBtn1">下载视频</a>
+</div>
+<canvas id="photo"></canvas>
+<script src="/javascripts/main.js"></script>
+<script src="/javascripts/mm.js"></script>
+</body>
+</html>
