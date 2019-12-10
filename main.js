@@ -11,7 +11,7 @@ var loginPage = document.querySelector('#login-page'),
 callPage.style.display = "none";
 // Login when the user clicks the button
 loginButton.addEventListener("click",
-    function(event) {
+    function loginClick() {
         name = usernameInput.value;
         if (name.length > 0) {
             send({

@@ -1,23 +1,47 @@
-// ²úÉúËæ»úÊý
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 if (!location.hash) {
     location.hash = Math.floor(Math.random() * 0xFFFFFF).toString(16);
 }
-// »ñÈ¡·¿¼äºÅ
+// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½
 var roomHash = location.hash.substring(1);
  
-// ·ÅÖÃÄã×Ô¼ºµÄÆµµÀid, ÕâÊÇÎÒ×¢²áÁËScaleDrone ¹ÙÍøºó£¬´´½¨µÄchannel
-// ÄãÒ²¿ÉÒÔ×Ô¼º´´½¨
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½Æµï¿½ï¿½id, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½ï¿½ï¿½ScaleDrone ï¿½ï¿½ï¿½ï¿½ï¿½ó£¬´ï¿½ï¿½ï¿½ï¿½ï¿½channel
+// ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½
 var drone = new ScaleDrone('87fYv4ncOoa0Cjne');
-// ·¿¼äÃû±ØÐëÒÔ 'observable-'¿ªÍ·
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 'observable-'ï¿½ï¿½Í·
 var roomName = 'observable-' + roomHash;
 var configuration = {
     iceServers: [{
-        urls: 'stun:stun.l.google.com:19302' // Ê¹ÓÃ¹È¸èµÄstun·þÎñ
+        urls: 'stun:stun.l.google.com:19302' // Ê¹ï¿½Ã¹È¸ï¿½ï¿½stunï¿½ï¿½ï¿½ï¿½
     }]
 };
  
 var room;
 var pc;
+var loginPage = document.querySelector('#login-page'),
+    usernameInput = document.querySelector('#username'),
+    loginButton = document.querySelector('#login'),
+    callPage = document.querySelector('#call-page'),
+    theirUsernameInput = document.querySelector('#their-username'),
+    callButton = document.querySelector('#call'),
+    hangUpButton = document.querySelector('#hang-up');
+callPage.style.display = "none";
+// Login when the user clicks the button
+loginButton.addEventListener("click",
+    function(event) {
+        name = usernameInput.value;
+        if (name.length > 0) {
+            send({
+                type: "login",
+                name: name
+            });
+        }
+        else
+        {
+            alert("please input Username!");
+        }
+    });
+
 function onSuccess() {}
  
 function onError(error) {
@@ -32,18 +56,18 @@ drone.on('open', function(error){
         if (error) {onError(error);}
     });
  
-    // ÒÑ¾­Á´½Óµ½·¿¼äºó£¬¾Í»áÊÕµ½Ò»¸ö members Êý×é£¬´ú±í·¿¼äÀïµÄ³ÉÔ±
-    // ÕâÊ±ºòÐÅÁî·þÎñÒÑ¾­¾ÍÐ÷
+    // ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ó£¬¾Í»ï¿½ï¿½Õµï¿½Ò»ï¿½ï¿½ members ï¿½ï¿½ï¿½é£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä³ï¿½Ô±
+    // ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½
     room.on('members', function(members){
         console.log('MEMBERS', members);
  
-        // Èç¹ûÄãÊÇµÚ¶þ¸öÁ´½Óµ½·¿¼äµÄÈË£¬¾Í»á´´½¨offer
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÇµÚ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½ï¿½Í»á´´ï¿½ï¿½offer
         var isOfferer = members.length === 2;
         startWebRTC(isOfferer);
     });
 });
  
-// Í¨¹ýScaledrone·¢ËÍÐÅÁîÏûÏ¢
+// Í¨ï¿½ï¿½Scaledroneï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 function sendMessage(message) {
     drone.publish({
         room: roomName,
@@ -54,58 +78,58 @@ function sendMessage(message) {
 function startWebRTC(isOfferer) {
     pc = new RTCPeerConnection(configuration);
  
-    // µ±±¾µØICE AgentÐèÒªÍ¨¹ýÐÅºÅ·þÎñÆ÷·¢ËÍÐÅÏ¢µ½ÆäËû¶ËÊ±
-    // »á´¥·¢icecandidateÊÂ¼þ»Øµ÷
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ICE Agentï¿½ï¿½ÒªÍ¨ï¿½ï¿½ï¿½ÅºÅ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±
+    // ï¿½á´¥ï¿½ï¿½icecandidateï¿½Â¼ï¿½ï¿½Øµï¿½
     pc.onicecandidate = function(event){
         if (event.candidate) {
             sendMessage({ 'candidate': event.candidate });
         }
     };
  
-    // Èç¹ûÓÃ»§ÊÇµÚ¶þ¸ö½øÈëµÄÈË£¬¾ÍÔÚnegotiationneeded ÊÂ¼þºó´´½¨sdp
+    // ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ÇµÚ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½ï¿½ï¿½ï¿½ï¿½negotiationneeded ï¿½Â¼ï¿½ï¿½ó´´½ï¿½sdp
     if (isOfferer) {
-        // onnegotiationneeded ÔÚÒªÇósesssionÐ­ÉÌÊ±·¢Éú
+        // onnegotiationneeded ï¿½ï¿½Òªï¿½ï¿½sesssionÐ­ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
         pc.onnegotiationneeded = function() {
-            // ´´½¨±¾µØsdpÃèÊö SDP (Session Description Protocol) sessionÃèÊöÐ­Òé
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sdpï¿½ï¿½ï¿½ï¿½ SDP (Session Description Protocol) sessionï¿½ï¿½ï¿½ï¿½Ð­ï¿½ï¿½
             pc.createOffer().then(localDescCreated).catch(onError);
         };
     }
  
-    // µ±Ô¶³ÌÊý¾ÝÁ÷µ½´ïÊ±£¬½«Êý¾ÝÁ÷×°ÔØµ½videoÖÐ
+    // ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×°ï¿½Øµï¿½videoï¿½ï¿½
     pc.onaddstream = function(event){
         remoteVideo.srcObject = event.stream;
     };
  
-    // »ñÈ¡±¾µØÃ½ÌåÁ÷
+    // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ï¿½ï¿½
     navigator.mediaDevices.getUserMedia({
         audio: true,
         video: true,
     }).then( function(stream) {
-        // ½«±¾µØ²¶»ñµÄÊÓÆµÁ÷×°ÔØµ½±¾µØvideoÖÐ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ø²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½×°ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½videoï¿½ï¿½
         localVideo.srcObject = stream;
  
-        // ½«±¾µØÁ÷¼ÓÈëRTCPeerConnection ÊµÀýÖÐ ·¢ËÍµ½ÆäËû¶Ë
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½RTCPeerConnection Êµï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         pc.addStream(stream);
     }, onError);
  
-    // ´ÓScaledrone¼àÌýÐÅÁîÊý¾Ý
+    // ï¿½ï¿½Scaledroneï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     room.on('data', function(message, client){
-        // ÏûÏ¢ÊÇÎÒ×Ô¼º·¢ËÍµÄ£¬Ôò²»´¦Àí
+        // ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ÍµÄ£ï¿½ï¿½ò²»´ï¿½ï¿½ï¿½
         if (client.id === drone.clientId) {
             return;
         }
  
         if (message.sdp) {
-            // ÉèÖÃÔ¶³Ìsdp, ÔÚoffer »òÕß answerºó
+            // ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½sdp, ï¿½ï¿½offer ï¿½ï¿½ï¿½ï¿½ answerï¿½ï¿½
             pc.setRemoteDescription(new RTCSessionDescription(message.sdp), function(){
-                // µ±ÊÕµ½offer ºó¾Í½ÓÌý
+                // ï¿½ï¿½ï¿½Õµï¿½offer ï¿½ï¿½Í½ï¿½ï¿½ï¿½
                 if (pc.remoteDescription.type === 'offer') {
                     pc.createAnswer().then(localDescCreated).catch(onError);
                 }
             }, onError);
         }
         else if (message.candidate) {
-            // Ôö¼ÓÐÂµÄ ICE canidatet µ½±¾µØµÄÁ´½ÓÖÐ
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ ICE canidatet ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             pc.addIceCandidate(
                 new RTCIceCandidate(message.candidate), onSuccess, onError
             );
