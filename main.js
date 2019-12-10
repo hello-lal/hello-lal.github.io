@@ -1,5 +1,5 @@
 
-var connection = new WebSocket('ws://localhost:3002'),
+var connection = new WebSocket(),
     name = "";
 var loginPage = document.querySelector('#login-page'),
     usernameInput = document.querySelector('#username'),
